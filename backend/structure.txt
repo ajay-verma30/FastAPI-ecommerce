@@ -1,0 +1,26 @@
+Ecommerce API basic structure.
+
+Types of API's to be build:
+1. Admin API:
+    Upload items
+    Update items
+    Delete items
+    Get all items
+    Specific item
+    Track items low on stock
+    Track sale details.
+    Change Order Status.
+
+2. Users API:
+    Register
+    Login
+    Add items to Cart
+    Get Cart Items
+    Delete Items from Cart
+    Track Current Status of the purchased Items
+    Search Item
+    Purchase Items
+    Delete User
+    Update Details of the User
+    Delete specific orders
+
