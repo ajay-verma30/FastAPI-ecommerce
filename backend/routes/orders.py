@@ -5,7 +5,7 @@ from models.orders import Order, OrderItem
 from models.users import User
 from models.items import Items
 from schemas.orders import OrderCreate, OrderOut
-from utils.token import get_current_user
+from utils.token import get_current_user, get_current_admin
 
 router = APIRouter(prefix="/orders", tags=["Orders"])
 
@@ -43,8 +43,8 @@ def create_order(order: OrderCreate, db: Session = Depends(get_db), user=Depends
 
 
 @router.get("/", response_model=list[OrderOut])
-def get_all_orders(db: Session = Depends(get_db)):
-    return db.query(Order).all()
+def get_all_orders(db: Session = Depends(get_db), user=Depends(get_current_user)):
+    return db.query(Order).filter(Order.user_id == user.id).all()
 
 
 @router.get("/{order_id}", response_model=OrderOut)
@@ -53,3 +53,8 @@ def get_order(order_id: int, db: Session = Depends(get_db)):
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
     return order
+
+
+@router.get('/all-orders', response_model=OrderOut)
+def get_all_orders(db:Session = Depends(get_db), admin=Depends(get_current_admin)):
+    return db.query(Order).all()
