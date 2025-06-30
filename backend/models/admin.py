@@ -1,6 +1,10 @@
-from sqlalchemy import Column, Integer, String, Enum, Boolean
+from sqlalchemy import Column, Integer, String, Enum, Boolean, DateTime
 from db.conn import Base
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
+from models.items import Items
+from datetime import datetime
+
 
 
 class Admin(Base):
@@ -12,3 +16,4 @@ class Admin(Base):
     password = Column(String(255), nullable=False)
     is_active  =Column(Boolean, default=True)
     items = relationship("Items", back_populates="admin")
+    created_at = Column(DateTime, default=datetime.utcnow)

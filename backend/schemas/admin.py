@@ -15,8 +15,8 @@ class AdminOut(BaseModel):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class  AdminLogin(BaseModel):
-    email: EmailStr
+    username: str
     password: str

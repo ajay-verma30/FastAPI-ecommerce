@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean, Text, DateTime
 from db.conn import Base
 from sqlalchemy.sql import func
-
+from sqlalchemy.orm import relationship
 
 class User(Base):
     __tablename__ = "users"
@@ -13,10 +13,11 @@ class User(Base):
     is_active  =Column(Boolean, default=True)
     first_name = Column(String(50), nullable=False)
     last_name = Column(String(50), nullable=False)
-    address = Column(Text, nullable=False)
+    address = Column(Text, nullable=True)
     pincode = Column(String(10), nullable=False)
     landmark = Column(String(100), nullable=True)
-    city = Column(String(50), nullable=False)
-    state = Column(String(50), nullable=False)
+    city = Column(String(50), nullable=True)
+    state = Column(String(50), nullable=True)
     created_at = Column(DateTime, server_default=func.now())
     phone = Column(String(20), nullable=True, unique=True, index=True)
+    orders = relationship("Order", back_populates="user")
