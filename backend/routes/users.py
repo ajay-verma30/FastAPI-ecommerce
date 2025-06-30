@@ -1,10 +1,10 @@
-from fastapi import FastAPI, APIRouter, Depends, HTTPException, status, Body
+from fastapi import  APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
 from db.conn import get_db
 from models.users import User
-from schemas.users import UserCreate, UserOut, UserLogin
-from utils.token import get_current_admin, create_access_token
+from schemas.users import UserCreate, UserOut, UserLogin,MyUserOut
+from utils.token import get_current_admin, create_access_token, get_current_user
 from utils.auth import hash_password, verify_password
 
 router = APIRouter(
@@ -61,3 +61,18 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
 def get_users(db:Session=Depends(get_db), admin=Depends(get_current_admin)):
     users=  db.query(User).all()
     return users
+
+@router.get("/{id}", response_model=MyUserOut)
+def get_my_user(id: int, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    if user.id != id:
+        raise HTTPException(status_code=403, detail="Access forbidden")
+    my_user = db.query(User).filter(User.id == id).first()
+    
+    if not my_user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"User with id {id} not found"
+        )
+
+
+    return my_user

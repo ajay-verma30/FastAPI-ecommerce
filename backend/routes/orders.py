@@ -5,12 +5,13 @@ from models.orders import Order, OrderItem
 from models.users import User
 from models.items import Items
 from schemas.orders import OrderCreate, OrderOut
+from utils.token import get_current_user
 
 router = APIRouter(prefix="/orders", tags=["Orders"])
 
 
 @router.post("/", response_model=OrderOut, status_code=201)
-def create_order(order: OrderCreate, db: Session = Depends(get_db)):
+def create_order(order: OrderCreate, db: Session = Depends(get_db), user=Depends(get_current_user)):
     user = db.query(User).filter(User.id == order.user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
